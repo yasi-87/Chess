@@ -1262,6 +1262,47 @@
       .analysis-content-column { overflow: visible; }
       .analysis-content-column .analysis-list { max-height: 32vh; overflow: auto; }
     }
+
+    /* Game screen: a large board, with the side panel turned into a slide-in menu */
+    #gameScreen { --board-size: min(calc(100dvh - 280px), calc(100vw - 28px), 940px); }
+    #gameScreen:not([hidden]) { animation-fill-mode: backwards; }
+    #gameScreen.layout { display: block; width: 100%; max-width: none; height: auto; min-height: 0; margin: 0 auto; overflow: visible; }
+    #gameScreen .play-area { width: var(--board-size); max-width: 100%; margin: 0 auto; }
+    #gameScreen .player { min-height: 46px; padding: 4px 12px; gap: 10px; }
+    #gameScreen .avatar { flex-basis: 34px; height: 34px; font-size: 17px; }
+    #gameScreen .player-info { display: flex; flex-wrap: wrap; align-items: center; gap: 1px 12px; }
+    #gameScreen .player-name, #gameScreen .player-detail, #gameScreen .player-opening, #gameScreen .captured { margin: 0; }
+    #gameScreen .clock { min-width: 64px; padding: 5px 10px; font-size: 15px; }
+    #gameScreen .board-frame { margin: 6px auto; }
+    #gameScreen .board-status { display: flex; flex-wrap: nowrap; align-items: center; gap: 8px; min-height: 44px; margin: 0 0 6px; padding: 4px 8px; }
+    #gameScreen .status-copy { flex: 1 1 auto; min-width: 0; }
+    #gameScreen .board-tools { display: flex; flex: 0 1 auto; flex-wrap: wrap; justify-content: flex-end; width: auto; gap: 6px; }
+    #gameScreen .board-tools button { width: auto; min-width: 34px; height: 32px; padding: 0 9px; font-size: 13px; line-height: 1.1; }
+    #gameScreen .board-help:empty { display: none; }
+    .game-menu-button { flex: 0 0 auto; height: 32px; padding: 0 12px; border: 1px solid var(--line); border-radius: 8px; background: var(--panel-raised); color: var(--text); font: inherit; font-size: 13px; font-weight: 600; cursor: pointer; white-space: nowrap; }
+    .game-menu-button:hover, .game-menu-button[aria-expanded="true"] { border-color: #53663d; color: var(--accent); }
+    #gameScreen.layout > .side-panel { position: fixed; top: 0; right: 0; bottom: 0; z-index: 15; display: flex; flex-direction: column; align-items: stretch; gap: 14px; width: min(400px, 92vw); max-width: none; height: auto; min-height: 0; padding: 14px 14px 24px; overflow-y: auto; border-left: 1px solid var(--line); background: var(--bg); box-shadow: -24px 0 70px #000a; transform: translateX(105%); visibility: hidden; transition: transform .25s ease, visibility 0s linear .25s; }
+    #gameScreen.layout.menu-open > .side-panel { transform: none; visibility: visible; transition: transform .25s ease; }
+    #gameScreen.layout > .side-panel > .card { grid-column: auto; }
+    .game-menu-head { display: flex; align-items: center; justify-content: space-between; padding: 2px 2px 0; font-size: 15px; }
+    .game-menu-backdrop { position: fixed; inset: 0; z-index: 14; background: #0009; opacity: 0; pointer-events: none; transition: opacity .25s ease; }
+    #gameScreen.menu-open .game-menu-backdrop { opacity: 1; pointer-events: auto; }
+    .toast { z-index: 16; }
+    #gameScreen:has(#puzzleGameCard:not([hidden])) { --board-size: min(calc(100dvh - 418px), calc(100vw - 28px), 800px); }
+    #gameScreen .play-area > #puzzleGameCard { margin-top: 6px; padding: 8px 14px 10px; }
+    #puzzleGameCard .card-heading { margin-bottom: 2px; }
+    #puzzleGameCard .puzzle-copy { min-height: 0; margin: 2px 0; }
+    #puzzleGameCard .puzzle-status { min-height: 20px; margin: 0 0 4px; line-height: 1.5; }
+    #puzzleGameCard .puzzle-actions .subtle-button { min-height: 32px; padding: 4px 12px; font-size: 12px; }
+    @media (max-width: 520px) {
+      #gameScreen { --board-size: min(calc(100dvh - 355px), calc(100vw - 24px)); }
+      #gameScreen:has(#puzzleGameCard:not([hidden])) { --board-size: min(calc(100dvh - 500px), calc(100vw - 24px)); }
+      #gameScreen .board-status { flex-wrap: wrap; }
+      #gameScreen .board-tools { flex: 1 1 100%; justify-content: flex-start; }
+    }
+    @media (prefers-reduced-motion: reduce) {
+      #gameScreen.layout > .side-panel, .game-menu-backdrop { transition: none; }
+    }
   </style>
 </head>
 <body>
@@ -1467,6 +1508,7 @@
         <div class="player" id="topPlayer"></div>
         <div class="board-frame"><div class="board" id="board" role="grid" aria-label="Chess board"></div></div>
         <div class="board-status">
+          <button type="button" class="game-menu-button" id="gameMenuButton" aria-expanded="false" aria-controls="gameSidePanel"><span aria-hidden="true">☰</span> <span>Menu</span></button>
           <div class="status-copy"><span class="status-dot" id="statusDot"></span><span id="statusText" aria-live="polite">White to move</span></div>
           <div class="board-tools">
             <button type="button" id="undoButton" aria-label="Undo move" title="Undo move">↶</button>
@@ -1480,15 +1522,17 @@
         </div>
         <p class="board-help" id="boardHelp" aria-live="polite"></p>
         <div class="player" id="bottomPlayer"></div>
-      </section>
-
-      <aside class="side-panel">
         <section class="card" id="puzzleGameCard" hidden>
           <div class="card-heading"><span class="card-title" id="puzzleGameTitle">Chess puzzle</span><span class="eyebrow" id="puzzleGameRating"></span></div>
           <p class="puzzle-copy" id="puzzleGameStatus"></p>
           <p class="puzzle-status" id="puzzleGameFeedback" aria-live="polite"></p>
           <div class="puzzle-actions"><button class="subtle-button" id="puzzleGameHint" type="button">Show hint</button><button class="subtle-button" id="puzzleGameNext" type="button">Next puzzle</button><button class="subtle-button" id="exitPuzzleButton" type="button">Exit puzzle</button></div>
         </section>
+      </section>
+
+      <div class="game-menu-backdrop" id="gameMenuBackdrop"></div>
+      <aside class="side-panel" id="gameSidePanel" aria-label="Game menu">
+        <div class="game-menu-head"><strong>Menu</strong><button type="button" class="icon-button" id="gameMenuClose" aria-label="Close menu">×</button></div>
         <section class="card" id="newGameCard">
           <div class="card-heading"><span class="card-title">New game</span><span class="eyebrow">PLAY</span></div>
           <div class="segmented" role="tablist" aria-label="Game mode">
@@ -1626,7 +1670,7 @@
         "Sharing is not supported here. The invite link was copied instead.":"اشتراک‌گذاری در اینجا پشتیبانی نمی‌شود؛ پیوند دعوت کپی شد.",
         "Could not share the invite:":"اشتراک دعوت انجام نشد:",
         "Allow takebacks":"اجازهٔ برگرداندن حرکت","Allow hints":"اجازهٔ راهنما","Allow move suggestions":"اجازهٔ پیشنهاد حرکت",
-        "3 minutes":"۳ دقیقه","Hint":"راهنما","Suggest":"پیشنهاد","Exit match":"خروج از بازی","Exit puzzle":"خروج از معما","Cancel premove":"لغو پیش‌حرکت",
+        "3 minutes":"۳ دقیقه","Menu":"منو","Close menu":"بستن منو","Hint":"راهنما","Suggest":"پیشنهاد","Exit match":"خروج از بازی","Exit puzzle":"خروج از معما","Cancel premove":"لغو پیش‌حرکت",
         "Exit this match?":"از این بازی خارج می‌شوید؟",
         "Your current game will end. Your completed-game record will not change.":"بازی فعلی پایان می‌یابد و در آمار بازی‌های کامل‌شده تغییری ثبت نمی‌شود.",
         "Keep playing":"ادامهٔ بازی","Show a hint":"نمایش راهنما","Suggest a move":"پیشنهاد حرکت",
@@ -4721,6 +4765,17 @@
       $("startButton").addEventListener("click",startGame);
       $("newGameTop").addEventListener("click",showLobby);
       $("goMenuButton").addEventListener("click",showLobby);
+      const gameScreenEl=$("gameScreen");
+      function setGameMenu(open) {
+        gameScreenEl.classList.toggle("menu-open",open);
+        $("gameMenuButton").setAttribute("aria-expanded",String(open));
+        if(open)$("gameMenuClose").focus({preventScroll:true});
+      }
+      $("gameMenuButton").addEventListener("click",()=>setGameMenu(!gameScreenEl.classList.contains("menu-open")));
+      $("gameMenuClose").addEventListener("click",()=>{setGameMenu(false);$("gameMenuButton").focus({preventScroll:true});});
+      $("gameMenuBackdrop").addEventListener("click",()=>setGameMenu(false));
+      ["startButton","resetButton","goMenuButton","newGameTop","launchButton","reviewGameButton"].forEach(id=>$(id).addEventListener("click",()=>setGameMenu(false)));
+      document.addEventListener("keydown",event=>{if(event.key==="Escape"&&gameScreenEl.classList.contains("menu-open"))setGameMenu(false);});
       $("resetButton").addEventListener("click",startGame);
       $("flipButton").addEventListener("click",()=>{orientation=orientation==="w"?"b":"w";render();});
       $("movesTab").addEventListener("click",()=>showGameInfoTab("moves"));
