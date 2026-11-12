@@ -8,6 +8,10 @@ Corresponding upstream source is available from the tagged Stockfish.js 19.0.1 r
 
 The bundled ECO opening data comes from Lichess's `chess-openings` project and is dedicated to the public domain under CC0 1.0: <https://github.com/lichess-org/chess-openings>.
 
+## Piece sets
+
+The SVG piece sets in `assets/pieces/` (alpha, california, cardinal, cburnett, dubrovny, gioco, governor, icpieces, maestro, merida, staunty and tatiana) come from the Lichess piece collection. Each set keeps its original author and license; the authors and license terms are listed in the Lichess `COPYING.md` file at <https://github.com/lichess-org/lila/blob/master/COPYING.md>. The `cburnett` set is by Colin M.L. Burnett and is used under the Creative Commons Attribution-ShareAlike 3.0 license (see `assets/pieces/cburnett/license.txt`). Several of the other sets use non-commercial licenses, so check their terms before using this project commercially.
+
 ## Run locally
 
 Install dependencies with `npm install`, then run `npm start` and open <http://127.0.0.1:4173>. The full engine downloads roughly 95 MB on first use and needs no cross-origin isolation headers because it is single-threaded.

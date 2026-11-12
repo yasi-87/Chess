@@ -1266,6 +1266,7 @@
     /* Board colors and piece styles, picked in the lobby */
     .square.light { background: var(--sq-light, #d9dece); }
     .square.dark { background: var(--sq-dark, #71806d); }
+    [data-pieces="classic"], [data-pieces="svg"] { --pw: #fffef4; --pws: #26372a; --pb: #18221b; --pbs: #f3f6e8; --pwt: 0 1px 0 #fff, 0 2px 3px #253428e8, 0 0 2px #111a12; --pbt: 0 1px 0 #f3f6e8, 0 2px 3px #101710, 0 0 3px #f6f9e9; }
     [data-pieces="ivory"] { --pw: #f7edd3; --pws: #4a3019; --pb: #2a1b10; --pbs: #d7b98c; --pwt: 0 1px 0 #fff8e4, 0 2px 3px #3b2410cc; --pbt: 0 1px 0 #d7b98c88, 0 2px 3px #000c; }
     [data-pieces="gold"] { --pw: #eef2f6; --pws: #596370; --pb: #d2a02a; --pbs: #4a3200; --pwt: 0 1px 0 #fff, 0 2px 3px #2a3340cc; --pbt: 0 1px 0 #ffe9a3, 0 2px 3px #3a2800cc; }
     [data-pieces="flat"] { --pw: #ffffff; --pws: #1c1f1d; --pb: #1c1f1d; --pbs: #000; --pwt: none; --pbt: none; --pf: none; }
@@ -1273,8 +1274,8 @@
     [data-pieces="glass"] { --pw: #e9f6ff; --pws: #7fb7e6; --pb: #1c2c44; --pbs: #8fc2f0; --pwt: 0 0 6px #bfe3ff, 0 2px 3px #1c3a5acc; --pbt: 0 0 6px #6aa8e0aa, 0 2px 3px #000b; }
     [data-pieces="neon"] { --pw: #8ff6ff; --pws: #00a8c0; --pb: #ff7ad9; --pbs: #b0007f; --pwt: 0 0 8px #3fe8ff, 0 0 2px #fff; --pbt: 0 0 8px #ff3fc8, 0 0 2px #fff; }
     [data-pieces="royal"] { --pw: #f5f0ff; --pws: #4b2e83; --pb: #4b2e83; --pbs: #f1e6ff; --pwt: 0 1px 0 #fff, 0 2px 3px #2a1650cc; --pbt: 0 1px 0 #d9c4ff88, 0 2px 3px #12082acc; }
-    [data-pieces]:not([data-pieces="classic"]) .piece.white, [data-pieces]:not([data-pieces="classic"]) .white-piece { color: var(--pw); -webkit-text-stroke-color: var(--pws); text-shadow: var(--pwt); filter: var(--pf, drop-shadow(0 2px 2px #101510aa)); }
-    [data-pieces]:not([data-pieces="classic"]) .piece.black, [data-pieces]:not([data-pieces="classic"]) .black-piece { color: var(--pb); -webkit-text-stroke-color: var(--pbs); text-shadow: var(--pbt); filter: var(--pf, drop-shadow(0 2px 2px #101510cc)); }
+    [data-pieces] .piece.white, [data-pieces] .white-piece { color: var(--pw); -webkit-text-stroke-color: var(--pws); text-shadow: var(--pwt); filter: var(--pf, drop-shadow(0 2px 2px #101510aa)); }
+    [data-pieces] .piece.black, [data-pieces] .black-piece { color: var(--pb); -webkit-text-stroke-color: var(--pbs); text-shadow: var(--pbt); filter: var(--pf, drop-shadow(0 2px 2px #101510cc)); }
     .theme-picker { display: grid; gap: 8px; margin-top: 12px; }
     .theme-options { display: grid; grid-template-columns: repeat(auto-fill, minmax(64px, 1fr)); gap: 5px; margin-top: 5px; }
     .theme-chip { display: grid; justify-items: center; gap: 4px; min-width: 0; padding: 4px 3px; border: 1px solid #ffffff14; border-radius: 8px; background: #ffffff06; color: #cbd4c8; font: inherit; font-size: 10px; cursor: pointer; }
@@ -1285,8 +1286,16 @@
     .board-swatch, .piece-swatch { display: flex; align-items: center; justify-content: center; width: 28px; height: 28px; border-radius: 5px; overflow: hidden; }
     .piece-swatch { width: 44px; }
     .piece-swatch .piece { font-size: 20px; transform: none; cursor: inherit; }
-    .piece-swatch[data-pieces="classic"] .piece.white { color: #fffef4; -webkit-text-stroke-color: #26372a; text-shadow: 0 1px 0 #fff, 0 2px 3px #253428e8, 0 0 2px #111a12; filter: drop-shadow(0 2px 2px #101510aa); }
-    .piece-swatch[data-pieces="classic"] .piece.black { color: #18221b; -webkit-text-stroke-color: #f3f6e8; text-shadow: 0 1px 0 #f3f6e8, 0 2px 3px #101710, 0 0 3px #f6f9e9; filter: drop-shadow(0 2px 2px #101510cc); }
+    .piece-swatch.image-swatch img { width: 22px; height: 22px; object-fit: contain; pointer-events: none; }
+    .svg-piece { color: transparent !important; -webkit-text-stroke: 0 !important; text-shadow: none !important; background-position: center !important; background-repeat: no-repeat !important; background-size: contain !important; filter: drop-shadow(0 2px 2px #0008) !important; }
+    .square > .svg-piece { width: 92%; height: 92%; overflow: hidden; }
+    .captured-piece.svg-piece { display: inline-block; width: 1.15em; height: 1.15em; vertical-align: middle; overflow: hidden; }
+    #promotionOptions button.svg-piece { background-size: 78% !important; }
+    .theme-group-head { display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between; gap: 6px 14px; }
+    .piece-colors { display: flex; flex-wrap: wrap; align-items: center; gap: 6px 12px; }
+    .piece-colors .subtle-button { min-height: 28px; padding: 3px 10px; font-size: 11px; }
+    .color-field { display: flex; align-items: center; gap: 8px; color: #cbd4c8; font-size: 12px; }
+    .color-field input { width: 34px; height: 28px; padding: 0; border: 1px solid #ffffff2a; border-radius: 6px; background: none; cursor: pointer; }
 
     /* Game screen: a large board, with the side panel turned into a slide-in menu */
     #gameScreen { --board-size: min(calc(100dvh - 280px), calc(100vw - 28px), 940px); }
@@ -1323,7 +1332,8 @@
       #gameScreen { --board-size: min(calc(100dvh - 355px), calc(100vw - 24px)); }
       #gameScreen:has(#puzzleGameCard:not([hidden])) { --board-size: min(calc(100dvh - 500px), calc(100vw - 24px)); }
       #gameScreen .board-status { flex-wrap: wrap; }
-      #gameScreen .board-tools { flex: 1 1 100%; justify-content: flex-start; }
+      #gameScreen .board-tools { flex: 1 1 100%; justify-content: flex-start; width: auto; }
+      #gameScreen .board-tools button, #gameScreen .board-tools .assist-button, #gameScreen .board-tools .exit-match-button { width: auto; min-width: 34px; height: 30px; padding: 0 10px; font-size: 12px; }
     }
     @media (prefers-reduced-motion: reduce) {
       #gameScreen.layout > .side-panel, .game-menu-backdrop { transition: none; }
@@ -1406,7 +1416,16 @@
           </div>
           <div class="theme-picker" aria-label="Board and pieces">
             <div class="theme-group"><span class="field-label" id="boardThemeLabel">Board</span><div class="theme-options" id="boardThemeOptions" role="radiogroup" aria-labelledby="boardThemeLabel"></div></div>
-            <div class="theme-group"><span class="field-label" id="pieceThemeLabel">Pieces</span><div class="theme-options" id="pieceThemeOptions" role="radiogroup" aria-labelledby="pieceThemeLabel"></div></div>
+            <div class="theme-group">
+              <div class="theme-group-head"><span class="field-label" id="pieceThemeLabel">Pieces</span>
+                <div class="piece-colors" aria-label="Piece colors">
+                  <label class="color-field"><span>White pieces</span><input type="color" id="whitePieceColor" value="#ffffff"></label>
+                  <label class="color-field"><span>Black pieces</span><input type="color" id="blackPieceColor" value="#1c1f1d"></label>
+                  <button type="button" class="subtle-button" id="resetPieceColors">Reset colors</button>
+                </div>
+              </div>
+              <div class="theme-options" id="pieceThemeOptions" role="radiogroup" aria-labelledby="pieceThemeLabel"></div>
+            </div>
           </div>
           <button class="primary-button" id="launchButton" type="button">Start game</button>
           <details class="profile-more">
@@ -1699,7 +1718,7 @@
         "Sharing is not supported here. The invite link was copied instead.":"اشتراک‌گذاری در اینجا پشتیبانی نمی‌شود؛ پیوند دعوت کپی شد.",
         "Could not share the invite:":"اشتراک دعوت انجام نشد:",
         "Allow takebacks":"اجازهٔ برگرداندن حرکت","Allow hints":"اجازهٔ راهنما","Allow move suggestions":"اجازهٔ پیشنهاد حرکت",
-        "3 minutes":"۳ دقیقه","Menu":"منو","Close menu":"بستن منو","Board":"صفحه","Pieces":"مهره‌ها","Board and pieces":"صفحه و مهره‌ها","Hint":"راهنما","Suggest":"پیشنهاد","Exit match":"خروج از بازی","Exit puzzle":"خروج از معما","Cancel premove":"لغو پیش‌حرکت",
+        "3 minutes":"۳ دقیقه","Menu":"منو","Close menu":"بستن منو","Board":"صفحه","Pieces":"مهره‌ها","White pieces":"مهره‌های سفید","Black pieces":"مهره‌های سیاه","Reset colors":"بازنشانی رنگ‌ها","Piece colors":"رنگ مهره‌ها","Piece colors need the site to be opened from a web address.":"برای تغییر رنگ مهره‌ها، سایت را از طریق آدرس وب باز کنید.","Board and pieces":"صفحه و مهره‌ها","Hint":"راهنما","Suggest":"پیشنهاد","Exit match":"خروج از بازی","Exit puzzle":"خروج از معما","Cancel premove":"لغو پیش‌حرکت",
         "Exit this match?":"از این بازی خارج می‌شوید؟",
         "Your current game will end. Your completed-game record will not change.":"بازی فعلی پایان می‌یابد و در آمار بازی‌های کامل‌شده تغییری ثبت نمی‌شود.",
         "Keep playing":"ادامهٔ بازی","Show a hint":"نمایش راهنما","Suggest a move":"پیشنهاد حرکت",
@@ -1923,14 +1942,29 @@
         {id:"wood",en:"Wooden",fa:"چوبی",filled:true},
         {id:"glass",en:"Glass",fa:"شیشه‌ای",filled:true},
         {id:"neon",en:"Neon",fa:"نئون",filled:true},
-        {id:"royal",en:"Royal",fa:"سلطنتی",filled:true}
+        {id:"royal",en:"Royal",fa:"سلطنتی",filled:true},
+        {id:"alpha",en:"Alpha",fa:"آلفا",filled:false,svg:true},
+        {id:"california",en:"California",fa:"کالیفرنیا",filled:false,svg:true},
+        {id:"cardinal",en:"Cardinal",fa:"کاردینال",filled:false,svg:true},
+        {id:"cburnett",en:"Cburnett",fa:"سی‌برنت",filled:false,svg:true},
+        {id:"dubrovny",en:"Dubrovny",fa:"دوبرووِنی",filled:false,svg:true},
+        {id:"gioco",en:"Gioco",fa:"جوکو",filled:false,svg:true},
+        {id:"governor",en:"Governor",fa:"فرماندار",filled:false,svg:true},
+        {id:"icpieces",en:"IC Pieces",fa:"آی‌سی",filled:false,svg:true},
+        {id:"maestro",en:"Maestro",fa:"مایسترو",filled:false,svg:true},
+        {id:"merida",en:"Merida",fa:"مریدا",filled:false,svg:true},
+        {id:"staunty",en:"Staunty",fa:"استانتی",filled:false,svg:true},
+        {id:"tatiana",en:"Tatiana",fa:"تاتیانا",filled:false,svg:true}
       ];
+      const pieceColors={w:"",b:""},validColor=value=>typeof value==="string"&&/^#[0-9a-f]{6}$/i.test(value);
       const themeStorageKey="nightfall-chess-look-v1";
       let boardThemeId="nightfall",pieceThemeId="classic",pieceFilled=false;
       try{
         const savedLook=JSON.parse(localStorage.getItem(themeStorageKey)||"{}");
         if(boardThemes.some(item=>item.id===savedLook.board))boardThemeId=savedLook.board;
         if(pieceThemes.some(item=>item.id===savedLook.pieces))pieceThemeId=savedLook.pieces;
+        if(savedLook.colors&&validColor(savedLook.colors.w))pieceColors.w=savedLook.colors.w;
+        if(savedLook.colors&&validColor(savedLook.colors.b))pieceColors.b=savedLook.colors.b;
       }catch(error){}
       pieceFilled=pieceThemes.find(item=>item.id===pieceThemeId).filled;
       const symbols = new Proxy(baseSymbols,{get:(table,key)=>pieceFilled&&typeof key==="string"&&key.length===1&&table[key.toLowerCase()]?table[key.toLowerCase()]:table[key]});
@@ -4210,7 +4244,10 @@
       function inviteUrl() {
         if(!roomInviteCode)throw new Error("Create a room before sharing an invite.");
         const invite=new URL(location.href);
-        invite.hash=new URLSearchParams({room:roomInviteCode,b:boardThemeId,p:pieceThemeId}).toString();
+        const inviteLook={room:roomInviteCode,b:boardThemeId,p:pieceThemeId};
+        if(pieceColors.w)inviteLook.pw=pieceColors.w.slice(1);
+        if(pieceColors.b)inviteLook.pb=pieceColors.b.slice(1);
+        invite.hash=new URLSearchParams(inviteLook).toString();
         return invite.href;
       }
       async function copyInvite() {
@@ -4832,13 +4869,97 @@
       $("style").addEventListener("change",()=>{styleStats();renderPlayers();});
       $("startButton").addEventListener("click",startGame);
       $("newGameTop").addEventListener("click",showLobby);
+      const glyphToCode={};
+      for(const [key,glyph] of Object.entries(baseSymbols))glyphToCode[glyph]=(key===key.toUpperCase()?"w":"b")+key.toUpperCase();
+      const pieceCodes=["wK","wQ","wR","wB","wN","wP","bK","bQ","bR","bB","bN","bP"];
+      const svgTextCache=new Map(),recoloredCache=new Map();
+      let svgSetId=null,recolorTimer=0,recolorRun=0;
+      const pieceFileUrl=(set,code)=>`assets/pieces/${set}/${code}.svg`;
+      function hexToRgb(hex) { const value=parseInt(hex.slice(1),16); return [value>>16&255,value>>8&255,value&255]; }
+      function parseSvgColor(token) {
+        const text=token.trim().toLowerCase();
+        if(text==="white")return [255,255,255];
+        if(text==="black")return [0,0,0];
+        if(text[0]==="#") {
+          let digits=text.slice(1);
+          if(digits.length===3||digits.length===4)digits=[...digits].map(char=>char+char).join("");
+          return /^[0-9a-f]{6,8}$/.test(digits)?hexToRgb("#"+digits.slice(0,6)):null;
+        }
+        const match=text.match(/^rgba?\(([^)]*)\)$/);
+        if(!match)return null;
+        const parts=match[1].split(",").slice(0,3).map(part=>part.trim());
+        if(parts.length<3)return null;
+        const channels=parts.map(part=>part.endsWith("%")?parseFloat(part)*2.55:parseFloat(part));
+        return channels.every(Number.isFinite)?channels.map(value=>Math.max(0,Math.min(255,Math.round(value)))):null;
+      }
+      function recolorSvg(text,code,color) {
+        const base=code[0]==="w"?[255,255,255]:[0,0,0],target=hexToRgb(color);
+        return text.replace(/(?<![\w-])(fill|stroke|stop-color|flood-color|color)(\s*[:=]\s*["']?\s*)(#[0-9a-fA-F]{3,8}\b|rgba?\([^)]*\)|white|black)/g,(whole,property,glue,token)=>{
+          const rgb=parseSvgColor(token);
+          if(!rgb)return whole;
+          const shifted=rgb.map((channel,index)=>Math.max(0,Math.min(255,Math.round(target[index]+channel-base[index]))));
+          return `${property}${glue}#${shifted.map(channel=>channel.toString(16).padStart(2,"0")).join("")}`;
+        });
+      }
+      function pieceImageSrc(set,code) {
+        const color=pieceColors[code[0]];
+        return (color&&recoloredCache.get(`${set}|${code}|${color}`))||pieceFileUrl(set,code);
+      }
+      async function recolorActiveSet() {
+        const run=++recolorRun,set=svgSetId;
+        if(!set||(!pieceColors.w&&!pieceColors.b)){decoratePieces(true);renderThemePicker();return;}
+        try {
+          await Promise.all(pieceCodes.map(async code=>{
+            const color=pieceColors[code[0]];
+            if(!color)return;
+            const key=`${set}|${code}|${color}`;
+            if(recoloredCache.has(key))return;
+            const url=pieceFileUrl(set,code);
+            if(!svgTextCache.has(url))svgTextCache.set(url,fetch(url).then(response=>{if(!response.ok)throw new Error(response.status);return response.text();}));
+            const text=await svgTextCache.get(url);
+            recoloredCache.set(key,"data:image/svg+xml;charset=utf-8,"+encodeURIComponent(recolorSvg(text,code,color)));
+          }));
+        }catch(error) {
+          if(run===recolorRun)showToast("Piece colors need the site to be opened from a web address.");
+          svgTextCache.clear();
+        }
+        if(run===recolorRun){decoratePieces(true);renderThemePicker();}
+      }
+      function undecoratePieces() {
+        document.querySelectorAll(".svg-piece").forEach(element=>{element.classList.remove("svg-piece");element.style.backgroundImage="";delete element.dataset.svgCode;});
+      }
+      function decoratePieces(refresh=false) {
+        if(!svgSetId)return;
+        const selector=".piece, .captured-piece, #promotionOptions button";
+        document.querySelectorAll(selector).forEach(element=>{
+          if(element.closest(".piece-swatch"))return;
+          const code=glyphToCode[element.textContent.trim()];
+          if(!code)return;
+          if(!refresh&&element.dataset.svgCode===code&&element.classList.contains("svg-piece"))return;
+          element.classList.add("svg-piece");element.dataset.svgCode=code;
+          element.style.backgroundImage=`url("${pieceImageSrc(svgSetId,code)}")`;
+        });
+      }
+      let decorateQueued=false;
+      new MutationObserver(()=>{
+        if(!svgSetId||decorateQueued)return;
+        decorateQueued=true;
+        queueMicrotask(()=>{decorateQueued=false;decoratePieces();});
+      }).observe(document.body,{childList:true,subtree:true,characterData:true});
       function applyLook(persist=true) {
         const board=boardThemes.find(item=>item.id===boardThemeId),pieces=pieceThemes.find(item=>item.id===pieceThemeId);
         const root=document.documentElement;
         root.style.setProperty("--sq-light",board.light);root.style.setProperty("--sq-dark",board.dark);
-        root.dataset.board=board.id;root.dataset.pieces=pieces.id;
+        root.dataset.board=board.id;root.dataset.pieces=pieces.svg?"svg":pieces.id;
+        for(const [side,name] of [["w","--pw"],["b","--pb"]]) {
+          if(pieceColors[side])root.style.setProperty(name,pieceColors[side]);else root.style.removeProperty(name);
+        }
         pieceFilled=pieces.filled;
-        if(persist)try{localStorage.setItem(themeStorageKey,JSON.stringify({board:board.id,pieces:pieces.id}));}catch(error){}
+        const previousSet=svgSetId;
+        svgSetId=pieces.svg?pieces.id:null;
+        if(previousSet&&!svgSetId)undecoratePieces();
+        if(svgSetId)decoratePieces(previousSet!==svgSetId);
+        if(persist)try{localStorage.setItem(themeStorageKey,JSON.stringify({board:board.id,pieces:pieces.id,colors:{w:pieceColors.w,b:pieceColors.b}}));}catch(error){}
       }
       function renderThemePicker() {
         const boardBox=$("boardThemeOptions"),pieceBox=$("pieceThemeOptions");
@@ -4857,14 +4978,20 @@
           button.type="button";button.className="theme-chip";button.setAttribute("role","radio");button.setAttribute("aria-checked",String(theme.id===pieceThemeId));button.dataset.theme=theme.id;button.title=name;
           const preview=document.createElement("span");preview.className="piece-swatch";preview.dataset.pieces=theme.id;preview.setAttribute("aria-hidden","true");
           const board=boardThemes.find(item=>item.id===boardThemeId);preview.style.background=`conic-gradient(${board.light} 25%, ${board.dark} 0 50%, ${board.light} 0 75%, ${board.dark} 0)`;
-          for(const [color,piece] of [["white","N"],["black","n"]]) {
+          if(theme.svg) {
+            preview.classList.add("image-swatch");
+            for(const code of ["wN","bN"]) {
+              const image=document.createElement("img");image.alt="";image.src=theme.id===svgSetId?pieceImageSrc(theme.id,code):pieceFileUrl(theme.id,code);image.draggable=false;
+              preview.append(image);
+            }
+          }else for(const [color,piece] of [["white","N"],["black","n"]]) {
             const glyph=document.createElement("span");glyph.className=`piece ${color}`;
             glyph.textContent=theme.filled?baseSymbols[piece.toLowerCase()]:baseSymbols[piece];
             preview.append(glyph);
           }
           const label=document.createElement("span");label.className="theme-name";label.textContent=name;
           button.append(preview,label);
-          button.addEventListener("click",()=>{pieceThemeId=theme.id;applyLook();renderThemePicker();render();});
+          button.addEventListener("click",()=>{pieceThemeId=theme.id;applyLook();renderThemePicker();render();if(theme.svg)recolorActiveSet();});
           pieceBox.append(button);
         }
       }
@@ -4873,9 +5000,26 @@
         const sharedLook=new URLSearchParams(location.hash.slice(1));
         if(boardThemes.some(item=>item.id===sharedLook.get("b")))boardThemeId=sharedLook.get("b");
         if(pieceThemes.some(item=>item.id===sharedLook.get("p")))pieceThemeId=sharedLook.get("p");
-        if(sharedLook.get("b")||sharedLook.get("p"))applyLook();
+        for(const [side,name] of [["w","pw"],["b","pb"]]) {
+          const value="#"+(sharedLook.get(name)||"");
+          if(validColor(value))pieceColors[side]=value.toLowerCase();
+        }
+        if(sharedLook.get("b")||sharedLook.get("p")||sharedLook.get("pw")||sharedLook.get("pb"))applyLook();
       }
+      const colorInputs={w:$("whitePieceColor"),b:$("blackPieceColor")},colorDefaults={w:"#ffffff",b:"#1c1f1d"};
+      function syncColorInputs() { for(const side of ["w","b"])colorInputs[side].value=pieceColors[side]||colorDefaults[side]; }
+      for(const side of ["w","b"])colorInputs[side].addEventListener("input",()=>{
+        pieceColors[side]=colorInputs[side].value.toLowerCase();
+        applyLook();
+        clearTimeout(recolorTimer);
+        recolorTimer=setTimeout(()=>{recolorActiveSet();render();},120);
+      });
+      $("resetPieceColors").addEventListener("click",()=>{
+        pieceColors.w="";pieceColors.b="";syncColorInputs();applyLook();recolorActiveSet();render();
+      });
+      syncColorInputs();
       renderThemePicker();
+      if(svgSetId)recolorActiveSet();
       $("goMenuButton").addEventListener("click",showLobby);
       const gameScreenEl=$("gameScreen");
       function setGameMenu(open) {
